@@ -1,31 +1,31 @@
-= timeago  
-  
-to use this gem, just require and run it, like this:  
-  
-==== Example 1  
-  
- require 'timeago'  
- time = Time.now - 60    
- Timeago.readable(time)    
-  
-and it should output  
- one minute ago  
-  
-==== Example 2  
-  
+= timeago
+
+to use this gem, just require and run it, like this:
+
+==== Example 1
+
+ require 'timeago'
+ time = Time.now - 60
+ TimeAgo.readable(time)
+
+and it should output
+ one minute ago
+
+==== Example 2
+
  require 'timeago'   
- time = Time.now - 13250  
- Timeago.readable(time)  
-  
-this should output  
- 3 hours ago  
-  
-this can go up to 5 years ago, after that it will change to the exact date.  
-  
+ time = Time.now - 13250
+ TimeAgo.readable(time)
+
+this should output
+ 3 hours ago
+
+this can go up to 5 years ago, after that it will change to the exact date.
+
 == Todo
 
 - build ability to change max - time
 - add seconds
 - add language options?
-  
+
 Copyright (c) 2012 Frederik Reich.

@@ -1,67 +1,89 @@
 require 'date'
 
-module TimeAgo
-  def relative_time
-    raise "This isn't a Time like class. I can't calculate the relative time" unless respond_to? :to_time
+class TimeAgo
+
+  def self.right_now
+    time = Time.new
+  	time.strftime("%I:%M:%S %p")
+  end
+
+  def maximal_time()
+
+  end
+
+  def language(lang)
+    case lang == "german"
+      when "just now" then "gerade jetzt"
+      when "#{distance} ago" then "vor #{distance}"
+      when "#{distance} from now" then "in #{distance}"
+      when "seconds" then "sekunden"
+      when "minutes" then "minuten"
+      when "hours" then "stunden"
+      when "yesterday" then "gestern"
+    end
+  end
+
+  def self.readable(time)
+
     rightnow = Time.new
-    backthen = to_time
+    backthen = time
 
-    delta_setting = (rightnow.to_i - backthen.to_i).floor
-  
+    delta_setting = (rightnow.to_i - backthen.to_i).floor / 60
+
     distance = distance_of_time_in_words(delta_setting)
+    return "#{distance} ago"
+    if rightnow.to_i == backthen.to_i
+      "just now"
+    elsif delta_minutes.abs <= (8724*60)
+      distance = distance_of_time_in_words(delta_minutes)
+      if distance <= (8724*60)
+        return "#{distance} from now"
+      elsif distance == "yesterday"
+        return "yesterday"
+      # elsif
+      #   return "#{distance} ago"
+      else
+        return "on #{DateTime.now.to_formatted_s(date_format)}"
+      end
+    end
   end
 
-private
-
-  def distance_of_time_in_words(seconds)
+def self.distance_of_time_in_words(minutes)
     case
-    when seconds < 25.seconds
-      "a few seconds ago"
-    when seconds < 31.seconds
-      "half a minute ago"
-    when seconds < 1.minute
-      "less than a minute ago"
-    when seconds < 2.minutes
-      "one minute ago"
-    when seconds < 45.minutes
-      "#{seconds/1.minute} minutes ago"
-    when seconds < 59.minutes
-      "less than one hour ago"
-    when seconds < 120.minutes
-      "one hour ago"
-    when seconds < 18.hours
-      "#{(seconds / 1.hour).round} hours ago"
-    when seconds < 48.hours
+    when minutes < 0.4
+      "a few seconds"
+    when minutes < 0.6
+      "half a minute"
+    when minutes < 1
+      "less than a minute"
+    when minutes < 2
+      "one minute"
+    when minutes < 45
+      "#{minutes} minutes"
+    when minutes < 59
+      "less than one hour"
+    when minutes < 120
+      "one hour"
+    when minutes < 1080
+      "#{(minutes / 60).round} hours"
+    when minutes < 2880
       "yesterday"
-    when seconds < 6.days
-      "#{(seconds / 1.day).round} days ago"
-    when seconds < 1.week
-      "one week ago"
-    when seconds < 28.days
-      "#{(seconds / 1.week).round} weeks ago"
-    when seconds < 30.days
-      "one month ago"
-    when seconds < 364.days
-      "#{(seconds / 1.month).round} months ago"
-    when seconds <= 365.days
-      "one year ago"
-    when seconds < 5.years
-      "#{(seconds / 1.year).round} years ago"
+    when minutes < 8640
+      "#{(minutes / 1440).round} days"
+    when minutes < 10080
+      "one week"
+    when minutes < 40320
+      "#{(minutes / 8640).round} weeks"
+    when minutes < 43200
+      "one month"
+    when minutes < 525580
+      "#{(minutes / 43200).round} months"
+    when minutes < 525600
+      "one year"
+    when minutes < 2628000
+      "#{(minutes / 525600).round} years"
     else
-      "#{seconds / 1.minute} minutes ago"
+      "#{minutes} minutes"
     end
-  end
-
 end
-
-class Time
-  include TimeAgo
-end
-
-if Object.const_defined? :ActiveSupport
-  module ActiveSupport
-    class TimeWithZone
-      include TimeAgo
-    end
-  end
 end
